@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/mjhmjh1104/EnderChat/issues"
   },
-  "homepage": "https://github.com/mjhmjh1104/EnderChat#readme"
+  "homepage": "https://github.com/mjhmjh1104/EnderChat#readme",
+  "dependencies": {
+    "express": "^4.15.3",
+    "socket.io": "^2.0.3"
+  }
 }
