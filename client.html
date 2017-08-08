@@ -2,12 +2,15 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>chat</title>
+    <title>EnderChat</title>
     <style>
       .chat_log{ width: 99%; height: 200px; }
       .name{ width: 10%; }
       .message{ width: 77%; }
       .chat{ width: 10%; }
+      .box{ width: 100%; height: 70px; margin: 0px; list-style: none;}
+      #main{ background: purple; font-size: 50px; color: white; padding-left: 50px; padding-top: 10px; padding-bottom: 10px;}
+      #menub{ width: 15px; height: 15px; background: transparent; font-size:50px; color: white; position: absolute;}
     </style>
     <style>
     ::-webkit-scrollbar {width: 5px; height: 8px; border: 1px solid #fff; }
@@ -16,7 +19,9 @@
     ::-webkit-scrollbar-thumb {height: 50px; width: 50px; background: rgba(0,0,0,.2); -webkit-border-radius: 0px; border-radius: 0px; -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.1)}
     </style>
   </head>
-  <body>
+  <body margin="0px" padding="0px">
+    <div class="box" id="main">ENDERCHAT</div>
+    <div class="box" id="menub">here</div>
     <div>
       <textarea id="chatLog" class="chat_log" style="resize:none;" readonly></textarea>
     </div>
@@ -46,7 +51,7 @@
       });
       socket.on('del', function(){
         $('#chatLog').val("");
-        location.href="/";
+        //location.href="/";
       });
       socket.on('start', function(val){
         $('#chatLog').val(val);

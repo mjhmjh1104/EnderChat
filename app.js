@@ -30,7 +30,7 @@ Data.findOne({name:"enderChat"}, function(err, data) {
     console.log(err);
   }
   if(!data) {
-    Data.create({name:"enderChat", count:0, val:""}, function (err, data) {
+    Data.create({name:"enderChat", count:1, val:""}, function (err, data) {
       if(err) {
         console.log("! Data creating Error");
         console.log(err);
@@ -53,10 +53,11 @@ app.get('/', function(req, res) {
 });
 
 app.get('/del', function(req, res) {
+  res.sendfile("client.html");
   Data.findOne({name:"enderChat"}, function(err, data) {
     if(err) return console.log("! Data Error\n" + err);
-    data.val="";
     data.count=1;
+    data.val="";
     data.save(function(err) {
       if(err) return console.log("! Data Error\n" + err);
     });
