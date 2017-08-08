@@ -77,7 +77,6 @@ io.on('connection', function(socket){
     data.save(function(err) {
       if(err) return console.log("! Data Error\n" + err);
     });
-    res.sendfile("client.html");
   });
 
   socket.on('disconnect', function(){
