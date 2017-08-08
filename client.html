@@ -40,6 +40,7 @@
       });
       socket.on('del', function(){
         $('#chatLog').val("");
+        location.href="/";
       });
       socket.on('start', function(val){
         $('#chatLog').val(val);
