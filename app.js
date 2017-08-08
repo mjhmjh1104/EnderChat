@@ -56,7 +56,7 @@ app.get('/del', function(req, res) {
   Data.findOne({name:"enderChat"}, function(err, data) {
     if(err) return console.log("! Data Error\n" + err);
     data.val="";
-    data.count=0;
+    data.count=1;
     data.save(function(err) {
       if(err) return console.log("! Data Error\n" + err);
     });
