@@ -5,6 +5,7 @@ var http = require('http').Server(app);
 var mongoose = require('mongoose');
 var io = require('socket.io')(http);
 var bodyParser = require('body-parser');
+var chat = ["", "", "", "", "", "", "", "", "", ""];
 
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
@@ -21,7 +22,8 @@ db.on("error", function(err) {
 var dataSchema = mongoose.Schema({
   name:{type:String},
   count:{type:Number},
-  val:{type:String}
+  val:{type:String},
+  lines:{type:Number}
 });
 var Data = mongoose.model('data', dataSchema);
 Data.findOne({name:"enderChat"}, function(err, data) {
@@ -30,7 +32,7 @@ Data.findOne({name:"enderChat"}, function(err, data) {
     console.log(err);
   }
   if(!data) {
-    Data.create({name:"enderChat", count:1, val:""}, function (err, data) {
+    Data.create({name:"enderChat", count:1, val:"", lines:0}, function (err, data) {
       if(err) {
         console.log("! Data creating Error");
         console.log(err);
@@ -53,11 +55,11 @@ app.get('/', function(req, res) {
 });
 
 app.get('/del', function(req, res) {
-  res.sendfile("client.html");
   Data.findOne({name:"enderChat"}, function(err, data) {
     if(err) return console.log("! Data Error\n" + err);
     data.count=1;
     data.val="";
+    data.lines=0;
     data.save(function(err) {
       if(err) return console.log("! Data Error\n" + err);
     });
@@ -65,9 +67,13 @@ app.get('/del', function(req, res) {
   console.log('> Chat deleted!');
   res.sendfile("client.html");
   io.emit('del');
+  for (var i = 0; i < 10; i++) {
+    chat[i] = "";
+  }
+    res.sendfile("client.html");
 });
 
-io.on('connection', function(socket){
+io.on('connection', function (socket) {
   console.log('> user connected: ', socket.id);
   var name;
   Data.findOne({name:"enderChat"}, function(err, data) {
@@ -78,6 +84,9 @@ io.on('connection', function(socket){
     data.save(function(err) {
       if(err) return console.log("! Data Error\n" + err);
     });
+    for (var i = 0; i < 10; i++) {
+      io.to(socket.id).emit('change chat', i, chat[i]);
+    }
   });
 
   socket.on('disconnect', function(){
@@ -93,10 +102,18 @@ io.on('connection', function(socket){
       if(err) return console.log("! Data Error\n" + err);
       io.emit('receive message', data.val, name, text);
       data.val = data.val + msg + "\n";
+      data.lines++;
       data.save(function(err) {
         if(err) return console.log("! Data Error\n" + err);
       });
     });
+    for (var i = 0; i < 9; i++) {
+      chat[i + 1] = chat[i];
+    }
+    chat[0] = text;
+    for (var j = 0; j < 10; j++) {
+      io.emit('change chat', j, chat[j]);
+    }
   });
 });
 
