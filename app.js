@@ -44,7 +44,7 @@ Data.findOne({name:"enderChat"}, function(err, data) {
 });
 
 app.get('/', function(req, res) {
-  res.sendfile("client.html");
+  res.sendfile("disconnected.html");
   /*
   Data.findOne({name:"enderChat"}, function(err, data) {
     if(err) return console.log("! Data Error\n" + err);
@@ -73,20 +73,21 @@ app.get('/del', function(req, res) {
     res.sendfile("client.html");
 });
 
-io.on('connection', function (socket) {
+io.on('connection', function(socket){
+  res.sendfile("client.html");
   console.log('> user connected: ', socket.id);
   var name;
   Data.findOne({name:"enderChat"}, function(err, data) {
     if(err) return console.log("! Data Error\n" + err);
     name = "user" + data.count++;
     io.to(socket.id).emit('change name', name);
-    io.to(socket.id).emit('start', data.val);
+    io.to(socket.id).emit('start', data.val, chat[0]);
     data.save(function(err) {
       if(err) return console.log("! Data Error\n" + err);
-    });
+    });/*
     for (var i = 0; i < 10; i++) {
       io.to(socket.id).emit('change chat', i, chat[i]);
-    }
+    }*/
   });
 
   socket.on('disconnect', function(){
